@@ -80,7 +80,6 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
     def init_device(self):
         self.debug_stream("In init_device()")
         self.get_device_properties(self.get_device_class())
-        self.attr_StorageDirPath_read = ''
         self.attr_IsStorageDirEmpty_read = False
         #----- PROTECTED REGION ID(PlexilPlanStorage.init_device) ENABLED START -----#
         
@@ -96,20 +95,6 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
     #    PlexilPlanStorage read/write attribute methods
     #-----------------------------------------------------------------------------
     
-    def read_StorageDirPath(self, attr):
-        self.debug_stream("In read_StorageDirPath()")
-        #----- PROTECTED REGION ID(PlexilPlanStorage.StorageDirPath_read) ENABLED START -----#
-        attr.set_value(self.attr_StorageDirPath_read)
-        
-        #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.StorageDirPath_read
-        
-    def write_StorageDirPath(self, attr):
-        self.debug_stream("In write_StorageDirPath()")
-        data=attr.get_write_value()
-        #----- PROTECTED REGION ID(PlexilPlanStorage.StorageDirPath_write) ENABLED START -----#
-        
-        #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.StorageDirPath_write
-        
     def read_IsStorageDirEmpty(self, attr):
         self.debug_stream("In read_IsStorageDirEmpty()")
         #----- PROTECTED REGION ID(PlexilPlanStorage.IsStorageDirEmpty_read) ENABLED START -----#
@@ -244,6 +229,10 @@ class PlexilPlanStorageClass(PyTango.DeviceClass):
 
     #    Class Properties
     class_property_list = {
+        'StorageDirPath':
+            [PyTango.DevString,
+            "Path to the Plexil Storage Directory",
+            ["/root/"] ],
         }
 
 
@@ -277,14 +266,6 @@ class PlexilPlanStorageClass(PyTango.DeviceClass):
 
     #    Attribute definitions
     attr_list = {
-        'StorageDirPath':
-            [[PyTango.DevString,
-            PyTango.SCALAR,
-            PyTango.READ_WRITE],
-            {
-                'label': "PlexilStorageDir",
-                'description': "This is the attribute which stores the path to the Plexil Storage Directory",
-            } ],
         'IsStorageDirEmpty':
             [[PyTango.DevBoolean,
             PyTango.SCALAR,
