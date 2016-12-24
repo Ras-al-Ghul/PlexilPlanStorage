@@ -50,7 +50,7 @@ import PyTango
 import sys
 # Add additional import
 #----- PROTECTED REGION ID(PlexilPlanStorage.additionnal_import) ENABLED START -----#
-
+import os, subprocess
 #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.additionnal_import
 
 ## Device States Description
@@ -98,8 +98,10 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
     def read_IsStorageDirEmpty(self, attr):
         self.debug_stream("In read_IsStorageDirEmpty()")
         #----- PROTECTED REGION ID(PlexilPlanStorage.IsStorageDirEmpty_read) ENABLED START -----#
-        attr.set_value(self.attr_IsStorageDirEmpty_read)
-        
+        attr.set_value(False)
+        path = PyTango.Database().get_class_property(sys.argv[0], "StorageDirPath")["StorageDirPath"][0]
+        if not os.listdir(path):
+            attr.set_value(True)
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.IsStorageDirEmpty_read
         
     
@@ -129,7 +131,17 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
         self.debug_stream("In AddPlan()")
         argout = False
         #----- PROTECTED REGION ID(PlexilPlanStorage.AddPlan) ENABLED START -----#
-        
+        try:
+            path = PyTango.Database().get_class_property(sys.argv[0], "StorageDirPath")["StorageDirPath"][0]
+            argin = argin.split(";")
+            source, dest = argin[0], path + argin[1]
+            command = 'cp' + ' ' + source + ' ' + dest
+            val = subprocess.check_call(command, shell=True)
+            if val == 0:
+                argout = True
+        except Exception as e:
+            argout = False
+            return argout
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.AddPlan
         return argout
         
@@ -143,7 +155,17 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
         self.debug_stream("In AddConfigFile()")
         argout = False
         #----- PROTECTED REGION ID(PlexilPlanStorage.AddConfigFile) ENABLED START -----#
-        
+        try:
+            path = PyTango.Database().get_class_property(sys.argv[0], "StorageDirPath")["StorageDirPath"][0]
+            argin = argin.split(";")
+            source, dest = argin[0], path + argin[1]
+            command = 'cp' + ' ' + source + ' ' + dest
+            val = subprocess.check_call(command, shell=True)
+            if val == 0:
+                argout = True
+        except Exception as e:
+            argout = False
+            return argout     
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.AddConfigFile
         return argout
         
@@ -157,7 +179,17 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
         self.debug_stream("In AddScript()")
         argout = False
         #----- PROTECTED REGION ID(PlexilPlanStorage.AddScript) ENABLED START -----#
-        
+        try:
+            path = PyTango.Database().get_class_property(sys.argv[0], "StorageDirPath")["StorageDirPath"][0]
+            argin = argin.split(";")
+            source, dest = argin[0], path + argin[1]
+            command = 'cp' + ' ' + source + ' ' + dest
+            val = subprocess.check_call(command, shell=True)
+            if val == 0:
+                argout = True
+        except Exception as e:
+            argout = False
+            return argout
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.AddScript
         return argout
         
@@ -171,7 +203,15 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
         self.debug_stream("In DeleteFile()")
         argout = False
         #----- PROTECTED REGION ID(PlexilPlanStorage.DeleteFile) ENABLED START -----#
-        
+        try:
+            path = PyTango.Database().get_class_property(sys.argv[0], "StorageDirPath")["StorageDirPath"][0]
+            command = 'rm ' + path + argin
+            val = subprocess.check_call(command, shell=True)
+            if val == 0:
+                argout = True
+        except Exception as e:
+            argout = False
+            return argout
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.DeleteFile
         return argout
         
@@ -185,7 +225,17 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
         self.debug_stream("In RetrieveFile()")
         argout = False
         #----- PROTECTED REGION ID(PlexilPlanStorage.RetrieveFile) ENABLED START -----#
-        
+        try:
+            path = PyTango.Database().get_class_property(sys.argv[0], "StorageDirPath")["StorageDirPath"][0]
+            argin = argin.split(";")
+            source, dest = path + argin[0], argin[1]
+            command = 'cp' + ' ' + source + ' ' + dest
+            val = subprocess.check_call(command, shell=True)
+            if val == 0:
+                argout = True
+        except Exception as e:
+            argout = False
+            return argout
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.RetrieveFile
         return argout
         
@@ -198,7 +248,16 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
         :rtype: PyTango.DevVoid """
         self.debug_stream("In ListDir()")
         #----- PROTECTED REGION ID(PlexilPlanStorage.ListDir) ENABLED START -----#
-        
+        try:
+            path = PyTango.Database().get_class_property(sys.argv[0], "StorageDirPath")["StorageDirPath"][0]
+            command = 'ls -l' + ' ' + path
+            if argin != 'stdout':
+                command = command + ' > ' + argin
+            val = subprocess.check_call(command, shell=True)
+            if val != 0:
+                return
+        except Exception as e:
+            return
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.ListDir
         
 
