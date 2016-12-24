@@ -51,6 +51,7 @@ import sys
 # Add additional import
 #----- PROTECTED REGION ID(PlexilPlanStorage.additionnal_import) ENABLED START -----#
 import os, subprocess
+from PyTango import DevState
 #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.additionnal_import
 
 ## Device States Description
@@ -82,7 +83,8 @@ class PlexilPlanStorage (PyTango.Device_4Impl):
         self.get_device_properties(self.get_device_class())
         self.attr_IsStorageDirEmpty_read = False
         #----- PROTECTED REGION ID(PlexilPlanStorage.init_device) ENABLED START -----#
-        
+        self.set_state(DevState.ON);
+        self.set_status("Ready to accept queries.");
         #----- PROTECTED REGION END -----#	//	PlexilPlanStorage.init_device
 
     def always_executed_hook(self):
